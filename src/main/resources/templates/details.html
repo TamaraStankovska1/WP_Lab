@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event Details</title>
+</head>
+<body>
+<h1>Event Details</h1>
+Name: <th:block th:text="${event.getName()}"></th:block></br>
+Description: <th:block th:text="${event.getDescription()}"></th:block></br>
+Rating: <th:block th:text="${event.getPopularityScore()}"></th:block></br>
+Location: <th:block th:text="${event.getLocation().getName()}"></th:block></br>
+<a href="/events">Back to Events List</a>
+</body>
+</html>
