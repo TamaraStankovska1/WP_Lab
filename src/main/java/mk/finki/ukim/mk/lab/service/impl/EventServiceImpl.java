@@ -29,27 +29,9 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> searchEvents(String name, Double rating, Long locationId) {
-        if(name == null || name.isBlank()){
-            name = null;
-        } else {
-            name = "%" + name + "%";
-        }
-        if (name == null && rating == null && locationId == null) {
-            return eventRepository.findAll();
-        } else if (name != null && rating == null && locationId == null) {
-            return eventRepository.findAllByNameLike(name);
-        } else if (name == null && rating != null && locationId == null) {
-            return eventRepository.findAllByPopularityScoreGreaterThanEqual(rating);
-        } else if (name == null && rating == null && locationId != null) {
-            return eventRepository.findAllByLocation_Id(locationId);
-        } else if (name != null && rating != null && locationId == null) {
-            return eventRepository.findAllByNameLikeAndPopularityScoreGreaterThanEqual(name, rating);
-        } else if (name != null && rating == null && locationId != null) {
-            return eventRepository.findAllByNameLikeAndLocationId(name, locationId);
-        } else if (name == null && rating != null && locationId != null) {
-            return eventRepository.findAllByPopularityScoreGreaterThanEqualAndLocationId( rating, locationId);
-        }
-        return eventRepository.findAllByNameLikeAndPopularityScoreGreaterThanEqualAndLocationId(name, rating, locationId);
+            return eventRepository.filterEvents(name, rating, locationId);
+
+
     }
 
     @Override
