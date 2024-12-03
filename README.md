@@ -1,1 +1,1 @@
-# WP-Lab
+# WP-Labs
