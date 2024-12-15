@@ -5,6 +5,7 @@ import mk.finki.ukim.mk.lab.model.Event;
 import mk.finki.ukim.mk.lab.model.Location;
 import mk.finki.ukim.mk.lab.service.EventService;
 import mk.finki.ukim.mk.lab.service.LocationService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,7 @@ public class EventController {
     }
 
     @PostMapping("/add")
+    @PreAuthorize("hasRole('ADMIN')")
     public String saveEvent(@RequestParam String name,
                             @RequestParam String description,
                             @RequestParam Double popularityScore,
@@ -50,6 +52,7 @@ public class EventController {
     }
 
     @PostMapping("/edit/{eventId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String editEvent(@PathVariable Long eventId,
                             @RequestParam String name,
                             @RequestParam String description,
@@ -60,6 +63,7 @@ public class EventController {
     }
 
     @GetMapping("/edit-form/{eventId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String getEditEventForm(@PathVariable Long eventId, Model model) {
         Optional<Event> event = eventService.findByIdOptional(eventId);
         if (event.isEmpty()) {
@@ -72,6 +76,7 @@ public class EventController {
     }
 
     @GetMapping("/add-form")
+    @PreAuthorize("hasRole('ADMIN')")
     public String addEvent(Model model) {
         List<Location> locations = locationService.findAll();
         model.addAttribute("locations", locations);
@@ -79,10 +84,12 @@ public class EventController {
     }
 
     @PostMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteEvent(@PathVariable Long id) {
         this.eventService.deleteById(id);
         return "redirect:/events";
     }
+
     @GetMapping("/details/{eventId}")
     public String getEventDetails(@PathVariable long eventId, Model model) {
         Optional<Event> event = eventService.findByIdOptional(eventId);

@@ -7,9 +7,13 @@
             width: 800px;
             margin: auto;
         }
+
+        .logout {
+            margin-top: 30px;
+        }
     </style>
 </head>
-<body>
+<body xmlns:th="http://www.thymeleaf.org">
 <header>
     <h1>Welcome to our Event Booking App</h1>
 </header>
@@ -44,12 +48,14 @@
     <div th:if="${error != null}">
         <h3 style="color: red" th:text="${'Error message: ' + error}"></h3>
     </div>
-    <a th:href="@{'/events/add-form'}"
-       class="btn btn-sm btn-info edit-product">
-        <i class="fa fa-trash">Add</i>
-    </a>
+    <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+        <a th:href="@{'/events/add-form'}"
+           class="btn btn-sm btn-info edit-product">
+            <i class="fa fa-trash">Add</i>
+        </a>
+    </th:block>
     <style>
-        .btn{
+        .btn {
             display: inline-block;
             padding: 6px 12px;
             font-size: 14px;
@@ -64,31 +70,55 @@
 
     </style>
     <div style="width: 100%" th:each="event: ${events}">
-        <input form="event-booking-form" style="display: inline-block" type="radio" name="eventName" th:value=" ${event.name}"
+        <input form="event-booking-form" style="display: inline-block" type="radio" name="eventName"
+               th:value=" ${event.name}"
                th:text="'Name: ' + ${event.name} + ', Description: ' + ${event.description}
                    + ', Rating: ' + ${event.popularityScore} + ', Location: ' + ${event.getLocation().getName()}">
-        <a th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}"
-           class="btn btn-sm btn-info edit-product">
-            <i class="fa fa-trash">Edit</i>
-        </a>
-        <form th:action="@{'/events/delete/{id}' (id=${event.getId()})}"
-              th:method="post">
-            <button type="submit"
-                    class="btn btn-sm btn-danger delete-product">
-                <i class="fa fa-trash">Delete</i>
-            </button>
-        </form>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{'/events/edit-form/{id}' (id=${event.getId()})}"
+               class="btn btn-sm btn-info edit-product">
+                <i class="fa fa-trash">Edit</i>
+            </a>
+        </th:block>
+        <th:block sec:authorize="hasRole('ROLE_ADMIN')">
+            <form th:action="@{'/events/delete/{id}' (id=${event.getId()})}"
+                  th:method="post">
+                <button type="submit"
+                        class="btn btn-sm btn-danger delete-product">
+                    <i class="fa fa-trash">Delete</i>
+                </button>
+            </form>
+        </th:block>
+
         <button><a th:href="@{'/events/details/' + ${event.getId()}}">Details</a></button>
     </div>
-    <form id="event-booking-form" th:action="@{/eventBooking}" th:method="POST">
-        <h2>Choose number of tickets:</h2>
-        <label>
-            <input type="number" name="numTickets" min="1" max="10">
-        </label>
-        <br/>
-        <br/>
-        <input type="submit" value="Submit">
-    </form>
+    <th:block sec:authorize="isAuthenticated()">
+        <form id="event-booking-form" th:action="@{/eventBooking}" th:method="POST">
+            <h2>Choose number of tickets:</h2>
+            <label>
+                <input type="number" name="numTickets" min="1" max="10">
+            </label>
+            <br/>
+            <br/>
+            <input type="submit" value="Submit">
+        </form>
+    </th:block>
+    <th:block sec:authorize="isAnonymous()">
+        <div>
+            <a th:href="@{'/login'}"
+               class="btn btn-sm btn-info logout">
+                <i class="fa fa-trash">Login</i>
+            </a>
+        </div>
+    </th:block>
+    <th:block sec:authorize="isAuthenticated()">
+        <div>
+            <a th:href="@{'/logout'}"
+               class="btn btn-sm btn-info logout">
+                <i class="fa fa-trash">Logout</i>
+            </a>
+        </div>
+    </th:block>
 
 </main>
 </body>

@@ -32,6 +32,7 @@ public class EventBookingController {
         model.addAttribute("eventBooking", eventBooking);
         return "bookingConfirmation";
     }
+
     @PostMapping("/details/{id}")
     public String DetailsForEvent(@PathVariable Long id){
         this.eventService.findByIdOptional(id);
